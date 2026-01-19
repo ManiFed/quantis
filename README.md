@@ -347,9 +347,10 @@ This project has been featured in the following instances:
 - [Tangle News: Lessons from the election you could bet on](https://www.readtangle.com/otherposts/lessons-from-the-election-you-could-bet-on/)
 - [Forecasting Newsletter: June 2024](https://forecasting.substack.com/p/forecasting-newsletter-june-2024)
 - [Calibrations Blog: Should we let ourselves see the future?](https://www.calibrations.blog/p/should-we-let-ourselves-see-the-future)
-- [Lightcone News: Accuracy and Trust](https://lightcone.news/about)
+- [Lightcone News: Accuracy and Trust](https://web.archive.org/web/20251013003102/https://lightcone.news/about)
 - [Valis Research: Unanswered Questions Surrounding Prediction Markets](https://valisresearch.xyz/work/unanswered-questions-surrounding-prediction-markets/index.html)
 - [Human Invariant: The Future of Play Money Prediction Markets](https://www.humaninvariant.com/blog/pm-play)
+- [Keyrock: Prediction Markets: The Next Frontier of Financial Markets](https://keyrock.com/prediction-markets-the-next-frontier-of-financial-markets/)
 
 I use prediction markets, mainly Manifold and Metaculus, as a personal exercise in calibration. This project grew out of an effort to see how useful they can be as information-gathering tools.
 
