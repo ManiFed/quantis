@@ -153,13 +153,13 @@ embeddings *args:
 
 # Run nightly process
 nightly: download-test extract-test grade-test group-test site-test
-    just download --log-level warn --resolved-since-days-ago 10 --reset-cache
-    just download --log-level warn --resolved-since-days-ago 10
-    just extract --log-level warn
-    just db-refresh-quick
-    uv run scripts/fix-criterion-probs.py
-    just grade --log-level warn
-    TQDM_MININTERVAL=100 just embeddings
-    just site-cache-reset
-    just site-build --silent
-    just site-push-dev
+    #just download --log-level warn --resolved-since-days-ago 10 --reset-cache
+    #just download --log-level warn --resolved-since-days-ago 10
+    #just extract --log-level warn
+    #just db-refresh-quick
+    #uv run scripts/fix-criterion-probs.py
+    #just grade --log-level warn
+    #TQDM_MININTERVAL=100 just embeddings
+    #just site-cache-reset
+    #just site-build --silent
+    #just site-push-dev
