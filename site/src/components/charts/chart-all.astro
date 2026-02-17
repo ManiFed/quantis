@@ -242,6 +242,147 @@ let { platforms, markets, scores, probs } = Astro.props;
 
 <div class="p-4 m-2">
   <div class="my-4">
+    <h3 class="font-bold text-2xl" id="horizon-and-scores">
+      Time Horizon and Score Rules
+      <a href="#horizon-and-scores">
+        <Icon
+          name="mdi:link-variant"
+          class="h-5 inline-block mb-1 opacity-10 hover:opacity-100 transition-opacity duration-100"
+        />
+      </a>
+    </h3>
+    <div class="my-2">
+      Compare calibration and accuracy with matched settings. Each option below
+      uses one evaluation horizon for the calibration plot and aligns the score
+      panels to that same horizon.
+    </div>
+  </div>
+  <SelectableOptions
+    options={[
+      {
+        icon: "mdi:clock-time-eight",
+        description: "Midpoint horizon with Brier score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "midpoint",
+          scoreType: "brier-midpoint",
+          caption: "Midpoint horizon; score strip includes Brier, logarithmic, and spherical means.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-eight",
+        description: "Midpoint horizon with logarithmic score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "midpoint",
+          scoreType: "logarithmic-midpoint",
+          caption: "Midpoint horizon; histogram focused on logarithmic scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-eight",
+        description: "Midpoint horizon with spherical score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "midpoint",
+          scoreType: "spherical-midpoint",
+          caption: "Midpoint horizon; histogram focused on spherical scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-seven",
+        description: "7-day pre-resolution horizon with Brier score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "before-close-days-7",
+          scoreType: "brier-before-close-days-7",
+          caption: "7-day horizon before close; score strip includes all three proper scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-seven",
+        description: "7-day pre-resolution horizon with logarithmic score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "before-close-days-7",
+          scoreType: "logarithmic-before-close-days-7",
+          caption: "7-day horizon before close; histogram focused on logarithmic scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-seven",
+        description: "7-day pre-resolution horizon with spherical score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "before-close-days-7",
+          scoreType: "spherical-before-close-days-7",
+          caption: "7-day horizon before close; histogram focused on spherical scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-four",
+        description: "30-day pre-resolution horizon with Brier score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "before-close-days-30",
+          scoreType: "brier-before-close-days-30",
+          caption: "30-day horizon before close; score strip includes all three proper scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-four",
+        description: "30-day pre-resolution horizon with logarithmic score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "before-close-days-30",
+          scoreType: "logarithmic-before-close-days-30",
+          caption: "30-day horizon before close; histogram focused on logarithmic scores.",
+        },
+      },
+      {
+        icon: "mdi:clock-time-four",
+        description: "30-day pre-resolution horizon with spherical score histogram.",
+        component: CalibrationAndScores,
+        props: {
+          platforms: platforms,
+          markets: markets,
+          scores: scores,
+          criterion: "before-close-days-30",
+          scoreType: "spherical-before-close-days-30",
+          caption: "30-day horizon before close; histogram focused on spherical scores.",
+        },
+      },
+    ]}
+  />
+</div>
+<hr class="my-2" />
+
+<div class="p-4 m-2">
+  <div class="my-4">
     <h3 class="font-bold text-2xl" id="calibration-alt">
       Side-By-Side Calibration
       <a href="#calibration-alt">

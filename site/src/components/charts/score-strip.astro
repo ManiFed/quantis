@@ -1,0 +1,72 @@
+---
+import type { MarketScoreDetails, PlatformDetails } from "@types";
+
+interface Props {
+  platforms: PlatformDetails[];
+  scores: MarketScoreDetails[];
+  scoreTypeKeys: string[];
+  scoreTypeLabels: string[];
+}
+
+let { platforms, scores, scoreTypeKeys, scoreTypeLabels } = Astro.props;
+
+const metricCards = scoreTypeKeys.map((scoreType, index) => {
+  const filtered = scores.filter(
+    (s) => s.score_type === scoreType && Number.isFinite(s.score),
+  );
+  const overallN = filtered.length;
+  const overallMean =
+    overallN > 0
+      ? filtered.reduce((acc, current) => acc + current.score, 0) / overallN
+      : null;
+
+  const perPlatform = platforms.reduce(
+    (acc, platform) => {
+      const platformScores = filtered.filter((s) => s.platform_slug === platform.slug);
+      if (platformScores.length === 0) {
+        return acc;
+      }
+      const mean =
+        platformScores.reduce((sum, current) => sum + current.score, 0) /
+        platformScores.length;
+      acc.push({
+        name: platform.name,
+        mean,
+        n: platformScores.length,
+      });
+      return acc;
+    },
+    [] as { name: string; mean: number; n: number }[],
+  );
+
+  return {
+    label: scoreTypeLabels[index] || scoreType,
+    scoreType,
+    overallN,
+    overallMean,
+    perPlatform,
+  };
+});
+---
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+  {
+    metricCards.map((card) => (
+      <div class="bg-base-light text-crust rounded-md drop-shadow-sm p-3">
+        <div class="text-sm font-semibold">{card.label}</div>
+        <div class="text-xs opacity-80">{card.scoreType}</div>
+        <div class="mt-2 text-lg font-bold">
+          {card.overallMean !== null ? card.overallMean.toFixed(4) : "N/A"}
+        </div>
+        <div class="text-xs opacity-80">overall n={card.overallN.toLocaleString()}</div>
+        <div class="mt-2 text-xs space-y-1">
+          {card.perPlatform.map((platform) => (
+            <div>
+              {platform.name}: {platform.mean.toFixed(4)} (n={platform.n.toLocaleString()})
+            </div>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>
