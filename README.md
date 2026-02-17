@@ -218,6 +218,15 @@ just site-dev # live preview the site in a browser
 just site-build # build the site to the site/dist directory
 ```
 
+If you want to deploy the site on **Railway**, you can do that too:
+
+1. Create a new Railway project from this repo.
+2. Set the service **Root Directory** to `site` (so it deploys the Astro site, not the Rust tools).
+3. Railway will use `site/nixpacks.toml` to install dependencies and run the build/start commands.
+4. The service listens on Railway's `$PORT` automatically via `npm run start`.
+
+This Railway setup is optional; the site remains a normal Astro static build that can still be deployed with `rclone`, nginx, S3, GitHub Pages, or any other static host.
+
 The first site page load (in preview mode) or build will take a while as items are downloaded from the server. Subsequent loads/builds will be much faster but will not reflect the database's current state. In order to clear the cache, run the task:
 
 ```bash
