@@ -361,3 +361,188 @@ As with any statistics, this data can be used to tell many stories. I do my best
 The code for this project as presented in this repository is copyright under the MIT License, attached.
 
 The contents of the live published website and database, including the explanatory descriptions, market/question links, categorizations, graphics, and visualizations are copyright under CC BY-NC-SA 4.0 Deed, attached.
+
+# Calibration-first dashboard expansion plan
+
+This section translates the current site experience into a product plan for a
+calibration-first dashboard, while explicitly adding (not removing) the missing
+features needed for robust cross-exchange comparison.
+
+## Current baseline in this repo
+
+Today the public site already provides:
+
+- Calibration and accuracy views on resolved markets.
+- Filtering presets based on trader count, volume, duration, recency, and
+  linked-question status.
+- Multi-platform calibration visualization and Brier-centric accuracy framing.
+
+The plan below preserves all of that and extends it with methodology controls,
+cohort transparency, richer scoring, and better diagnostics.
+
+## 1) Core evaluation object
+
+Evaluate only resolved binary markets (`yes/no`) per run. Each included market
+must carry:
+
+- Realized outcome `y in {0,1}`.
+- One sampled probability `p` from a selected evaluation-time rule.
+- Filter metadata (exchange, topic, series, resolution date, optional quality
+  flags).
+
+### Evaluation-time (horizon) rules (single selection at a time)
+
+- Fixed pre-resolution horizons: 30d, 14d, 7d, 3d, 1d, 6h, 1h.
+- Close: last valid quote before resolution with a configurable safety offset.
+- Smoothed close: trailing-window average (optionally time-weighted).
+
+Default mode uses exactly one horizon; multi-horizon is comparison mode only.
+
+## 2) Cohort definition and exclusion accounting
+
+A cohort is the exact set of markets scored and calibrated. Cohort controls:
+
+- Exchanges.
+- Topic.
+- Market series.
+- Resolution time window.
+- Required evaluation-time (horizon) selection.
+- Inclusion rules (default resolved-only): exclude voided/canceled/unresolved,
+  and exclude markets missing usable horizon data.
+
+### Missing-horizon policy (single global rule)
+
+For target horizon `t*`, take nearest observation within `±tolerance`. If none
+exists, exclude and classify as `missing_horizon_observation`.
+
+Always show:
+
+- `N_scored`.
+- `N_excluded` with reason breakdown.
+
+## 3) Primary outputs (computed from same cohort + same sampled probability)
+
+### Top strip: proper scoring rules
+
+Given sampled `p` and outcome `y`:
+
+- Brier score.
+- Logarithmic score.
+- Spherical score.
+
+#### Probability clipping policy
+
+For logarithmic/spherical, clip `p` to `[epsilon, 1-epsilon]` with fixed
+epsilon.
+
+Show per exchange and overall:
+
+- Metric values.
+- Sample size.
+- Clip rate.
+
+Aggregation default: unweighted mean. Advanced toggle for weighted aggregation
+only when reliable liquidity proxies are available.
+
+### Main panel: calibration chart with exchange lines
+
+Provide two interchangeable views:
+
+- Reliability diagram: predicted-vs-observed with diagonal reference,
+  uncertainty intervals, bin counts on hover.
+- Calibration residuals: `(observed - predicted)` with zero reference line for
+  easier multi-exchange comparison.
+
+Binning v1 default: fixed-width bins (0.1). Keep bin-count visibility
+prominent.
+
+## 4) Secondary diagnostics
+
+Add a compact sharpness panel to avoid false comfort from trivial 0.5
+forecasts:
+
+- Mean entropy by exchange and/or probability histogram.
+- Interpret with calibration jointly (good calibration + low sharpness can be
+  weak).
+
+## 5) Filter rail and comparison behavior
+
+### Filter rail groups
+
+- Cohort: exchanges, topic, series, resolution window, outcome status.
+- Evaluation: horizon selector (required), tolerance (advanced), aggregation.
+- Scoring: Brier/log/spherical visibility toggles.
+
+### Exchange line management
+
+- Up to 3 active lines by default.
+- Remaining lines dimmed.
+- Interactive legend with pinning.
+
+### Always-visible cohort transparency bar
+
+Display at top of chart area:
+
+- Scoring `N` markets.
+- Excluded `M` with reason breakdown.
+- Horizon selection.
+- Resolution window.
+- Topic/series summary.
+- Probability clipping rate note.
+
+## 6) Accuracy-over-time without abandoning calibration-first UX
+
+Add rolling mode:
+
+- Single window (default) or rolling windows.
+- Rolling parameters: window size + step + target horizon.
+
+Rolling outputs:
+
+- Score strip becomes metric trend lines (or compact trend table).
+- Main calibration panel shows latest window by default, with optional time
+  scrub later.
+
+## 7) Topic/series comparability safeguards
+
+- Topic heterogeneity warning for broad mixed-base-rate cohorts.
+- Series-only comparison mode to reduce confounding across unlike markets.
+- Show series instance count when series mode is active.
+
+## 8) Benchmark integration as first-class peers
+
+Treat benchmarks as exchange-like lines on identical market IDs and horizons.
+
+Sources:
+
+- User-uploaded benchmark probabilities.
+- Built-in baselines: 0.5, topic base-rate, persistence.
+- Curated external benchmark datasets (later phase).
+
+UI placement: `Exchanges` selector with separate `Benchmarks` subsection.
+
+## 9) Drill-down for trust and debugging
+
+- Bin click opens market drawer with sampled probability, outcome, and sorting
+  by surprise.
+- Worst-mistakes panel per exchange (top surprising misses), plus quick filters
+  (disputed, low-liquidity, missingness risk).
+
+## 10) Suggested launch defaults
+
+- Horizon: 7d before resolution.
+- Tolerance: ±6h nearest observation.
+- Aggregation: mean.
+- Cohort: resolved binary only.
+- Exclude voided/canceled/disputed by default.
+- Calibration view default: residuals.
+- Bin scheme default: fixed-width 0.1 bins.
+
+## 11) Methodology-forward feature backlog
+
+- Matched cohort toggle (same-series / matched-question comparison).
+- Adjusted tab (raw vs covariate-adjusted scores).
+- Calibration slope and intercept in score strip.
+- Rare-event lens.
+- Data coverage quality indicator for high missingness/low-count bins.
+

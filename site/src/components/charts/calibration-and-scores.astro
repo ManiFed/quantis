@@ -6,12 +6,14 @@ import type {
 } from "@types";
 import CalibrationDefault from "@components/charts/calibration-default.astro";
 import HistogramWithBox from "@components/charts/histogram-scores-with-box.astro";
+import ScoreStrip from "@components/charts/score-strip.astro";
 
 interface Props {
   platforms: PlatformDetails[];
   markets: MarketDetails[];
   scores: MarketScoreDetails[];
-  scoreType: string;
+  scoreType?: string;
+  criterion?: string;
   width?: number;
   heights?: number[];
   aspectRatio?: number;
@@ -22,15 +24,36 @@ let {
   markets,
   scores,
   scoreType = "brier-midpoint",
+  criterion = "midpoint",
   width = 720,
   caption,
 } = Astro.props;
+
+const scoreTypeSuffix = {
+  midpoint: "midpoint",
+  "time-average": "average",
+  "before-close-days-7": "before-close-days-7",
+  "before-close-days-30": "before-close-days-30",
+}[criterion] || "midpoint";
+
+const stripScoreTypes = [
+  `brier-${scoreTypeSuffix}`,
+  `logarithmic-${scoreTypeSuffix}`,
+  `spherical-${scoreTypeSuffix}`,
+];
 ---
 
 <div class="flex flex-col gap-2">
+  <ScoreStrip
+    platforms={platforms}
+    scores={scores}
+    scoreTypeKeys={stripScoreTypes}
+    scoreTypeLabels={["Brier", "Logarithmic", "Spherical"]}
+  />
   <CalibrationDefault
     platforms={platforms}
     markets={markets}
+    criterion={criterion}
     width={width}
     height={300}
     caption={caption}
